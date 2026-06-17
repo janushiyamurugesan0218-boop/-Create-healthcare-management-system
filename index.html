@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CarePulse Healthcare Management System</title>
+    <style>
+        /* CSS Embedded inside HTML */
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background-color: #0b0f17;
+            color: #f1f5f9;
+            margin: 0;
+            padding: 30px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        header {
+            margin-bottom: 30px;
+            border-bottom: 1px solid #1e293b;
+            padding-bottom: 15px;
+        }
+        h1 { color: #10b981; margin: 0; font-size: 28px; }
+        p.subtitle { color: #64748b; margin: 5px 0 0 0; font-size: 14px; }
+        
+        /* Clinical Operations Metrics Grid */
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        .metric-card {
+            background-color: #111827;
+            border: 1px solid #1e293b;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+        }
+        .metric-card h3 { margin: 0 0 10px 0; color: #94a3b8; font-size: 13px; text-transform: uppercase; letter-spacing: 0.05em; }
+        .metric-card .value { font-size: 32px; font-weight: bold; color: #f8fafc; }
+
+        /* Dashboard Master Split Layout Architecture */
+        .main-layout {
+            display: grid;
+            grid-template-columns: 360px 1fr;
+            gap: 30px;
+        }
+        @media (max-width: 950px) {
+            .main-layout { grid-template-columns: 1fr; }
+        }
+
+        .panel {
+            background-color: #111827;
+            border: 1px solid #1e293b;
+            padding: 25px;
+            border-radius: 12px;
+            height: fit-content;
+        }
+        h2 { margin-top: 0; font-size: 18px; color: #10b981; border-bottom: 1px solid #1e293b; padding-bottom: 10px; margin-bottom: 20px; }
+
+        /* Form Layout Elements */
+        .form-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 6px; color: #94a3b8; font-size: 13px; }
+        input, select, textarea {
+            width: 100%; padding: 10px; background-color: #0b0f17;
+            border: 1px solid #334155; color: white; border-radius: 6px;
+            box-sizing: border-box; outline: none; font-size: 14px;
+            font-family: inherit;
+        }
+        textarea { resize: none; height: 70px; }
+        
+        button {
+            width: 100%; padding: 12px; background-color: #10b981;
+            color: #0b0f17; border: none; border-radius: 6px;
+            font-weight: bold; cursor: pointer; font-size: 14px; transition: background 0.2s;
+        }
+        button:hover { background-color: #059669; }
+
+        /* Healthcare Ledger Matrix Table */
+        .table-container { overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; text-align: left; font-size: 14px; }
+        th, td { padding: 12px; border-bottom: 1px solid #1e293b; vertical-align: top; }
+        th { color: #94a3b8; font-weight: 600; text-transform: uppercase; font-size: 12px; }
+        tr:hover { background-color: #1e293b50; }
+
+        /* Triage Level Badges */
+        .badge {
+            padding: 3px 8px; border-radius: 4px; font-size: 11px; font-weight: bold; text-transform: uppercase;
+        }
+        .bg-emergency { background-color: #7f1d1d; color: #f87171; }
+        .bg-urgent { background-color: #78350f; color: #fbbf24; }
+        .bg-routine { background-color: #065f46; color: #34d399; }
+
+        .btn-discharge {
+            background-color: transparent; color: #ef4444; border: 1px solid #7f1d1d; 
+            padding: 4px 8px; font-size: 12px; border-radius: 4px; cursor: pointer; width: auto;
+        }
+        .btn-discharge:hover { background-color: #7f1d1d; color: white; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <h1>CarePulse Clinical Hub</h1>
+            <p class="subtitle">Admit incoming medical patients, evaluate structural urgency logs, and monitor clinical resource distribution load matrices.</p>
+        </header>
+
+        <div class="metrics-grid">
+            <div class="metric-card">
+                <h3>Active Triage Cases</h3>
+                <div class="value" id="activeCasesCount">0</div>
+            </div>
+            <div class="metric-card">
+                <h3>Critical Emergency Alerts</h3>
+                <div class="value" id="emergencyCount" style="color: #f87171;">0</div>
+            </div>
+            <div class="metric-card">
+                <h3>Total Daily Admissions</h3>
+                <div class="value" id="totalAdmissionsCount" style="color: #38bdf8;">0</div>
+            </div>
+        </div>
+
+        <div class="main-layout">
+            <div class="panel">
+                <h2>Patient Intake Registration</h2>
+                <form id="patientForm">
+                    <div class="form-group">
+                        <label for="patientName">Patient Full Name</label>
+                        <input type="text" id="patientName" placeholder="e.g., Jonathan Harker" required>
+                    </div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                        <div class="form-group">
+                            <label for="patientAge">Age</label>
+                            <input type="number" id="patientAge" min="0" placeholder="e.g., 34" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="triageLevel">Triage Severity Category</label>
+                            <select id="triageLevel">
+                                <option value="Routine">Routine Care</option>
+                                <option value="Urgent">Urgent Assessment</option>
+                                <option value="Emergency">Stat Emergency</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="assignedDoctor">Attending Physician/Department</label>
+                        <select id="assignedDoctor">
+                            <option value="Dr. J. Owens (Cardiology)">Dr. J. Owens (Cardiology)</option>
+                            <option value="Dr. M. Lin (General Medicine)">Dr. M. Lin (General Medicine)</option>
+                            <option value="Dr. S. Patel (Pediatrics)">Dr. S. Patel (Pediatrics)</option>
+                            <option value="Dr. E. Vance (Trauma/ER)">Dr. E. Vance (Trauma/ER)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="symptomsNotes">Chief Diagnostic Complaint / Symptoms Notes</label>
+                        <textarea id="symptomsNotes" placeholder="Describe primary symptoms or incoming vital logs..." required></textarea>
+                    </div>
+                    <button type="submit">Commit Intake File Record</button>
+                </form>
+            </div>
+
+            <div class="panel table-container">
+                <h2>Active Patient Operations Registry Ledger</h2>
+                <table id="clinicalTable">
+                    <thead>
+                        <tr>
+                            <th>Patient Identity</th>
+                            <th>Attending Care Unit</th>
+                            <th>Triage Severity</th>
+                            <th>Symptoms / Medical Notes</th>
+                            <th>Discharge Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tableBody">
+                        </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script src="healthEngine.js"></script>
+</body>
+</html>
